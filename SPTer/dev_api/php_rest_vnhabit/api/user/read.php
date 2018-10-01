@@ -5,7 +5,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
 include_once '../../config/Database.php';
-include_once '../../models/User.php'
+include_once '../../models/User.php';
 
 // Instantiate DB & connect
 $database = new Database();
@@ -14,11 +14,11 @@ $db = $database->connect();
 // Instantiate User object
 $user = new User($db);
 
-// get row count
-$num = $result->rowCount();
-
 // User query
 $result = $user->read();
+
+// get row count
+$num = $result->rowCount();
 
 // check if any users
 if ($num > 0) {
@@ -29,10 +29,11 @@ if ($num > 0) {
         extract($row);
         $user_item = array(
             'id' => $user_id,
-            'user_name' => $user_name,
+            'username' => $username,
+            'password' => $password,
             'email' => $email,
-            'date_of_birth' => $date_of_birth,
             'gender' => $gender,
+            'date_of_birth' => $date_of_birth,
             'user_icon' => $user_icon,
             'avatar' => $avatar,
             'user_description' => $user_description
@@ -50,6 +51,7 @@ if ($num > 0) {
     echo json_encode(
         array('message' => 'No Users Found')
     );
+    die();
 }
 
 ?>
