@@ -3,7 +3,7 @@
     class User {
         // db
         private $conn;
-        private $table = 'User';
+        private $table = 'user';
 
         // user
         public $user_id;
@@ -128,10 +128,83 @@
             $stmt->bindParam(':user_description', $this->user_description);
 
             // Execute query
-            if($stmt->execute()) {
+            if ($stmt->execute()) {
                 return true;
             }
 
+            // Print error if something goes wrong
+            printf("Error: %s.\n", $stmt->error);
+            return false;
+        }
+
+        // Update user
+        public function update() {
+            // create query
+            $query = 'UPDATE ' . $this->table . ' SET 
+                        username = :username, 
+                        password = :password, 
+                        email = :email, 
+                        date_of_birth = :date_of_birth, 
+                        gender = :gender, 
+                        user_icon = :user_icon, 
+                        avatar = :avatar, 
+                        user_description = :user_description
+                    WHERE user_id = :user_id
+                    ';
+
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            // Clean data
+            $this->user_id = htmlspecialchars(strip_tags($this->user_id));
+            $this->username = htmlspecialchars(strip_tags($this->username));
+            $this->password = htmlspecialchars(strip_tags($this->password));
+            $this->email = htmlspecialchars(strip_tags($this->email));
+            $this->date_of_birth = htmlspecialchars(strip_tags($this->date_of_birth));
+            $this->gender = htmlspecialchars(strip_tags($this->gender));
+            $this->user_icon = htmlspecialchars(strip_tags($this->user_icon));
+            $this->avatar = htmlspecialchars(strip_tags($this->avatar));
+            $this->user_description = htmlspecialchars(strip_tags($this->user_description));
+
+            // Bind data
+            $stmt->bindParam(':user_id', $this->user_id);
+            $stmt->bindParam(':username', $this->username);
+            $stmt->bindParam(':password', $this->password);
+            $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':date_of_birth', $this->date_of_birth);
+            $stmt->bindParam(':gender', $this->gender);
+            $stmt->bindParam(':user_icon', $this->user_icon);
+            $stmt->bindParam(':avatar', $this->avatar);
+            $stmt->bindParam(':user_description', $this->user_description);
+
+            // Execute query
+            if ($stmt->execute()) {
+                return true;
+            }
+
+            // Print error if something goes wrong
+            printf("Error: %s.\n", $stmt->error);
+            return false;
+        }
+
+        // Detele user
+        public function delete() {
+            // create query
+            $query = 'DELETE FROM ' . $this->table . ' WHERE user_id = :user_id';
+
+            // Prepare statement
+            $stmt = $this->conn->prepare($query);
+
+            // Clean data
+            $this->user_id = htmlspecialchars(strip_tags($this->user_id));
+
+            // Bind data
+            $stmt->bindParam(':user_id', $this->user_id);
+
+            // Execute query
+            if($stmt->execute()) {
+                return true;
+            }
             // Print error if something goes wrong
             printf("Error: %s.\n", $stmt->error);
             return false;

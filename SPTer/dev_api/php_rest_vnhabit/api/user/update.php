@@ -3,7 +3,7 @@
 // Headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/Database.php';
@@ -19,6 +19,9 @@ $user = new User($db);
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
 
+// Set ID to update
+$user->user_id = $data->user_id;
+
 $user->username = $data->username;
 $user->password = $data->password;
 $user->email = $data->email;
@@ -28,14 +31,13 @@ $user->user_icon = $data->user_icon;
 $user->avatar = $data->avatar;
 $user->user_description = $data->user_description;
 
-// Create user
-if ($user->create()) {
+if ($user->update()) {
     echo json_encode(
-        array('message' => 'user Created')
+        array('message' => 'user Updated')
     );
 } else {
     echo json_encode(
-        array('message' => 'user Not Created')
+        array('message' => 'user Not Updated')
     );
 }
 
